@@ -39,3 +39,21 @@
 
 # debug information files
 *.dwo
+=======
+# build artifacts
+build/
+*.o
+*.out
+*.a
+*.so
+
+# editors
+.vscode/
+.idea/
+
+# OS junk
+.DS_Store
+
+# temp
+*.log
+

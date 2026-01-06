@@ -104,10 +104,15 @@ What moved:
     if(root->value < current->value)root->right = current;
     else{root->left = current;}
 
-    //R-R clash
-    //Case 1-> uncle is red;
+#if 0
+Case 1) Uncle is red
+  change the colors of parent, uncle,grandfather
+  fix up from grandfather to root ---> line 123 - 126
+#endif
+
     if(current->color == red && p->color == red){
       node->grand = p->parent;
+      p->parent = gg;
       if(grand){
         node uncle = (grand->left == p)?grand->right:grand->left;
       }
@@ -115,20 +120,40 @@ What moved:
         uncle->color = black;
         p->color = red;
         grad->color = red;
-        grand->parent = gg;
         while(gg && gg->color == red){
           gg->color = black;
           gg = gg->parent;
         }
       }
+
+#if 0
+Case 2) uncle is black
+  4 Condition
+  a)left-left  right_rotate, swap
+  b)left-right left_rotate, right_rotate, swap
+  c)right->right left_rotate, swap
+  d)right->left right_rotate, left_rotate, swap
+#endif
+
       if(uncle && uncle->color == black){
-        
-        // TO DO 
+        if(p->left == current && gg->left == p){
+          this->right_rotate(gg);
+          std::swap(gg->color,p->color);
+        }else if(gg->left == p && p->right == p){
+          this->left_rotate(p);
+          this->right_rotate(current);
+          std::swap(current->color,gg->color);
+        }else if(p->right == current && gg->right == current){
+          this->left_rotate(gg);
+          std::swap(p->color, gg->color);
+        }else{
+          this->right_rotate(p);
+          this->left_rotate(gg);
+          std::swap(gg->color,current->color);
+        }
       }
-      
     }
     
-
   }
 
 };

@@ -32,20 +32,21 @@ What moved:
     node beta = y->left;
     root->right = beta;
     if(beta)beta->parent = root;
-    if(root->parent){ 
+    if(!root->parent){ 
       y->parent = nullptr;
       y->left = root;
-      x->parent = y;
     }else{
       node p = root->parent;
-      y->parent = root->parent;
-      if(p->left == x){
+      y->parent = p;
+      y->left = root;
+      if(p->left == root){
         p->left = y;
       }else{
         p->right = y;
       }
-      root->parent = y;
     }
+    root->parent = y;
+    return y;
   }
 
 #if 0
@@ -83,5 +84,51 @@ What moved:
     }
     root->parent = y;
     return y;
-  } 
-}
+  }
+
+  
+  void insert(T value)noexcept{
+    node current = new node(value);
+    current.color = red;
+    node p = nullptr;
+    while(root != nullptr){
+      p = root;
+      if(current->value > root->value){
+        root = root->left;
+      }else{
+        root = root->right;
+      }
+    }
+    current->parent = p;
+    if(p == nullptr)root = current;
+    if(root->value < current->value)root->right = current;
+    else{root->left = current;}
+
+    //R-R clash
+    //Case 1-> uncle is red;
+    if(current->color == red && p->color == red){
+      node->grand = p->parent;
+      if(grand){
+        node uncle = (grand->left == p)?grand->right:grand->left;
+      }
+      if(uncle && uncle->color == red){
+        uncle->color = black;
+        p->color = red;
+        grad->color = red;
+        grand->parent = gg;
+        while(gg && gg->color == red){
+          gg->color = black;
+          gg = gg->parent;
+        }
+      }
+      if(uncle && uncle->color == black){
+        
+        // TO DO 
+      }
+      
+    }
+    
+
+  }
+
+};

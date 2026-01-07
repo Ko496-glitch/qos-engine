@@ -86,7 +86,9 @@ What moved:
     return y;
   }
 
-  
+  node successor(node )noexcept{
+          
+   }  
   void rb_insert(T value)noexcept{
     node current = new node(value);
     current.color = red;
@@ -155,6 +157,35 @@ Case 2) uncle is black
         }
       }
     }
+    
+#if 0
+tranlate(x, y) ------> take subtree starting from y and replace with x and delete x; 
+
+Case 1) x is left child
+Case 2) x is right child
+
+#endif
+    node* nb_translate(node x, node y)noexcept{      
+      y->parent = x->parent;
+
+      if(x->parent->left == x){
+        x->parent->left = y;
+        if(y->parent->left == y){
+          y->parent->left = nullptr;
+        }else{
+          y->parent->right = nullptr;
+        }
+      }else{
+        x->parent->right = y;
+        if(y->parent->left == y){
+          y->parent->left = nullptr;
+        }else{
+          y->parent->right = nullptr;
+        }
+      }
+      delete x;
+      return y;
+    }
 
     node* rb_find(T value){
       node current = new node(value);
@@ -189,18 +220,18 @@ Case 2) uncle is black
           current->right = nullptr;
           delete current;
         }else{
-          node temp = current;
-          while(temp->left != nullptr){
-            temp = temp->right;
+          current = current->right;
+          node succ = current;
+          while(succ->left){
+            current = current->left;
           }
-          temp->left->parent = current->parent;
-          temp->left->left = current->left;
-          temp->left->right = current->right;
-          temp->left = nullptr;
-          delete current;
-          return;
+i
+          this->rb_translate()
+          node temp = current;
         }
       }else{
+
+      }
 
       }
     }

@@ -87,7 +87,7 @@ What moved:
   }
 
   
-  void insert(T value)noexcept{
+  void rb_insert(T value)noexcept{
     node current = new node(value);
     current.color = red;
     node p = nullptr;
@@ -105,9 +105,11 @@ What moved:
     else{root->left = current;}
 
 #if 0
+
 Case 1) Uncle is red
   change the colors of parent, uncle,grandfather
   fix up from grandfather to root ---> line 123 - 126
+
 #endif
 
     if(current->color == red && p->color == red){
@@ -151,6 +153,55 @@ Case 2) uncle is black
           this->left_rotate(gg);
           std::swap(gg->color,current->color);
         }
+      }
+    }
+
+    node* rb_find(T value){
+      node current = new node(value);
+      if(current->value == root->value){return current;}
+      while(current != nullptr){
+        if(current->value < root->value){
+          current = current->left;
+          root = root->left;
+        }else{
+          current = current->right;
+          root = root->right;
+        }
+      } 
+      return nullptr;
+    }
+
+    void rb_delete(T del_node)noexc::ept{
+      node current = find(del_node);
+      if(!current)return;
+      if(current->color == red){
+        if(!current->left && !current->right){
+          delete current ;
+          current->parent = nullptr;
+          return;
+        }else if(current->left && !current->right){
+          current->left->parent = current->parent;
+          current->left = nullptr;
+          delete current;
+          return;
+        }else if(!current->left && current->right){
+          current->right->parent = current->parent;
+          current->right = nullptr;
+          delete current;
+        }else{
+          node temp = current;
+          while(temp->left != nullptr){
+            temp = temp->right;
+          }
+          temp->left->parent = current->parent;
+          temp->left->left = current->left;
+          temp->left->right = current->right;
+          temp->left = nullptr;
+          delete current;
+          return;
+        }
+      }else{
+
       }
     }
     

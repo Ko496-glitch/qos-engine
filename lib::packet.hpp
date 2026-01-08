@@ -1,9 +1,10 @@
 #pragma once
 #include<new>
 #include<utility>
+#include<cstdint>
 #include "lib::egress_buffer.hpp"
 #include<cassert>
-namespace {
+namespace lib{
   struct packet{   
     std::uint64_t id;
     std::uint32_t src_ip;
@@ -26,5 +27,5 @@ namespace {
   struct package{
     packet pkt;
     meta_data meta;
-  } 
+  };
 }

@@ -11,14 +11,25 @@
 
 namespace lib{
   
-  template<typename T, typename Drop_polciy = Tail_drop>
-  class queue{
-
+  template<typename Drop_policy = Tail_drop>
+  class Queue{
+    private:
     std::queue<package>buffer_queue;
+    std::size_t id;
     std::size_t packet_count = 0;
     std::size_t current_bytes = 0;
-    
+    bool current_use = false;
     public:
+
+    Queue(std::size_t int_)noexcept: id{id_}{};
+
+    std::size_t get_id()noexcept{
+      return this->id;
+    }
+    
+    bool use()noexcept{
+      return this->current_use;
+    }
 
     bool enqueue(const &pkt, )noexcept{
       if(!DropPolicy::allowed_enqueue()){
@@ -26,20 +37,16 @@ namespace lib{
       }
       buffer_queue.push(pkt);
       ++packet_count;
-      this->current_bytes += packet_size;
+      this->current_bytes += pkg.pkt.byte_size;
+      return true;
     }
 
     bool dequque()noexcept{
-      package temp_packet = buffer_queue.front();
-      //buffer_queue.pop_front();
-
-      if(!DropPolicy::allowed_deqeueu()){
-        return false;
-      }
-      buffer_queue.pop_front();
-      --this->packet_count;
-      this->current_bytes -= packet_size;
-      return temp_packet;
+      package pkg = buffer_queue.front();
+      buffer_queue.pop;
+      --this->packet_count;    
+      this->current_bytes -= pkg.pkt.byte_size;
+      return  true;
     }
 
     bool empty()const{

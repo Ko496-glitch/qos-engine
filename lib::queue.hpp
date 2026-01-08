@@ -7,16 +7,14 @@
 #include "lib::egresss_buffer.hpp"
 #include "lib::rb_tree.hpp"
 #include "lib::policy.hpp"
+#include "lib::global_queue.hpp"
 
 namespace lib{
-  constexpr std::size_t max_queue = 10;
-  constexpr std::size_t global_capacity = 30 * 1024;
-  constexpr std::size_t alive_queue = 1;
-  std::size_t packet_size = std::size(lib::packet);
-
-  template<typename T,typename policy_type = lib::wfq ,typename Drop_polciy = lib::Tail_drop>
+  
+  template<typename T, typename Drop_polciy = Tail_drop>
   class queue{
-    std::queue<packet>buffer_queue;
+
+    std::queue<package>buffer_queue;
     std::size_t packet_count = 0;
     std::size_t current_bytes = 0;
     
@@ -32,20 +30,31 @@ namespace lib{
     }
 
     bool dequque()noexcept{
-      packet temp_packet = buffer_queue.front();
+      package temp_packet = buffer_queue.front();
       //buffer_queue.pop_front();
 
-      if(DropPolicy::allowed_deqeueu()){
+      if(!DropPolicy::allowed_deqeueu()){
         return false;
       }
       buffer_queue.pop_front();
-      ++this->packet_count;
+      --this->packet_count;
       this->current_bytes -= packet_size;
       return temp_packet;
     }
 
     bool empty()const{
       return buffer_queue.size() == 0;
+    }
+
+    std::size_t size()const{
+      return this->buffer_queue.size();
+    }
+
+    std::size_t percentage()noexcept{
+      std::size_t max_bytes = gloabal_space/alive_queue;
+
+      std::size_t percent_space = this->current_bytes/max_bytes;      
+      return percent_space;
     }
     
   }

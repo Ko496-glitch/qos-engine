@@ -18,7 +18,11 @@ namespace lib{
     std::size_t id;
     std::size_t packet_count = 0;
     std::size_t current_bytes = 0;
+    std::size_t last_active{};
+    std::size_t bytes_limit = 0;
     bool current_use = false;
+
+
     public:
 
     Queue(std::size_t int_)noexcept: id{id_}{};
@@ -31,6 +35,13 @@ namespace lib{
       return this->current_use;
     }
 
+    
+    bool empty()const{
+      return buffer_queue.size() == 0;
+    }
+
+    void set_limit(std::size_t new_limit){this->queue.max_bytes = new_limit;}
+
     bool enqueue(const &pkt, )noexcept{
       if(!DropPolicy::allowed_enqueue()){
         return false;
@@ -38,6 +49,7 @@ namespace lib{
       buffer_queue.push(pkt);
       ++packet_count;
       this->current_bytes += pkg.pkt.byte_size;
+      this->last_active = lib::auto();
       return true;
     }
 
@@ -46,14 +58,14 @@ namespace lib{
       buffer_queue.pop;
       --this->packet_count;    
       this->current_bytes -= pkg.pkt.byte_size;
-      return  true;
+      if(this->empty()){
+        this->last_active = lib::auto();
+      }
+      return true;
     }
 
-    bool empty()const{
-      return buffer_queue.size() == 0;
-    }
 
-    std::size_t size()const{
+    std::size_t queue_size()const{
       return this->buffer_queue.size();
     }
 
@@ -62,6 +74,13 @@ namespace lib{
 
       std::size_t percent_space = this->current_bytes/max_bytes;      
       return percent_space;
+    }
+
+    void reset()noexcept{
+      this->packet_count = 0;
+      this->current_bytes = 0;
+      this->current_use = false;
+      this->last_active = 0;
     }
     
   }

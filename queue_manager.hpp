@@ -9,7 +9,14 @@
 #include "lib::policy.hpp"
 #include "lib::global_queue.hpp"
 #include "lib::queue.hpp"
+#include<chrono>
 
+
+inline std::uint64_t now()noexcept{
+  using clock = std::chrono::steady_clock;
+  return std::chrono::duration_cast<std::chrono::seconds>(clock::now().time_since_epoch()).count();
+
+}
 
 #if 0
 This will handle following task;

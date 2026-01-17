@@ -28,38 +28,37 @@ namespace lib{
   template<typename T>
   class Queue_manager{
     private:
-      std::size_t next_id = 2;
-      std::vector<Queue>queues;
-
+      std::size_t next_id = 2; // next_id for queues identification
+      std::array<Queue>queues; // for acitve queue_id list
+      std::vector<std::size_t>free_slots; // for free free_slots
+      std::size_t nxt_slot;
     public:
-    
     Queue_manager()noexcept: queues.push_back(Queue(1));
 
     Queue default_queue()noexcept{
       return this->queues.front();
     }
 
-    Queue* create_queue()noexcept{
        
-     for(int i{1};i<queues.size();++i){
-       if(!queues[i]->current_use)continue;
-        
-     } 
-
-      Queue temp = new queue(++id);
-       queues.push(temp);
-       ++alive_queue;
-
-       std::size_t new_limit 
+    std::size_t create_queue()noexcept{
+      std::size_t index;
+      if(!free_slots.empty()){
+        index = free_slots.back();
+        free_slots.pop_back();
+      }else{
+        if(nxt_slot == max_queue){
+          throw std::runtime_error("No more slots left, packet will be dropped");
+        }
+        index = next_slot++;
+      }
+      queues[index].current_use = true;
+      ++alive_queue;
+      recompute_limits();
+      return index;
     }
+
 
     
-
-    void delete_queue(Queue& q)noexcept{
-      std::size_t index = q->id;
-
-
-    }
     std::size_t Num_queue()noexcept{
       return queues.size();
     }

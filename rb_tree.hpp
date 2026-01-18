@@ -244,40 +244,117 @@ Case 2) x is right child
           delete current;
           return;
         }
-
-        // case 3 -> node to be deleted is black with black children
-
-
-        if(current->color == black){
-          current->color 
-        }
-        
     }
   }
-    void rb_delete_fixup(node x){
-      while(x!= root && x->color == black){
-        if(x == x->parent->left){
-          node s = x->parent->right;
-          if(s && s->color == red){
-            s->color = black;
-            x->parent->color =red;
-            this->rotate_left(x->parent);
-            s = x->parent->right;
-          }else{
-            node s = x->parent->left;
-            if(s && s->color == red){
-              s->color = black;
-              x->parent->color = red;
-              this->rotate_right(x->parent);
-              s = x->parent->left;
-            }
-          }
+    void rb_delete_fixup(node x) {
+    while (x != root && x->color() == black) {
 
-          }
-        
+        // =========================
+        // x is LEFT child
+        // =========================
+        if (x == x->parent->left) {
+
+            node s = x->parent->right;
+
+            // Case 3.1: sibling RED
+            if (s && s->color() == red) {
+                s->color() = black;
+                x->parent->color() = red;
+                left_rotate(x->parent);
+                s = x->parent->right;
+            }
+
+            // Case 3.2: sibling BLACK, both children BLACK
+            if (s &&
+                s->color() == black &&
+                (!s->left  || s->left->color()  == black) &&
+                (!s->right || s->right->color() == black))
+            {
+                s->color() = red;
+                x = x->parent;
+                continue;
+            }
+
+            // Case 3.3: sibling BLACK, near child RED, far child BLACK
+            if (s &&
+                s->color() == black &&
+                s->left && s->left->color() == red &&
+                (!s->right || s->right->color() == black))
+            {
+                s->left->color() = black;
+                s->color() = red;
+                right_rotate(s);
+                s = x->parent->right;
+            }
+
+            // Case 3.4: sibling BLACK, far child RED
+            if (s &&
+                s->color() == black &&
+                s->right && s->right->color() == red)
+            {
+                s->color() = x->parent->color();
+                x->parent->color() = black;
+                s->right->color() = black;
+                left_rotate(x->parent);
+                x = root;
+            }
         }
-      }
+
+        // =========================
+        // x is RIGHT child (MIRROR)
+        // =========================
+        else {
+
+            node s = x->parent->left;
+
+            // Case 3.1 mirror
+            if (s && s->color() == red) {
+                s->color() = black;
+                x->parent->color() = red;
+                right_rotate(x->parent);
+                s = x->parent->left;
+            }
+
+            // Case 3.2 mirror
+            if (s &&
+                s->color() == black &&
+                (!s->left  || s->left->color()  == black) &&
+                (!s->right || s->right->color() == black))
+            {
+                s->color() = red;
+                x = x->parent;
+                continue;
+            }
+
+            // Case 3.3 mirror
+            if (s &&
+                s->color() == black &&
+                s->right && s->right->color() == red &&
+                (!s->left || s->left->color() == black))
+            {
+                s->right->color() = black;
+                s->color() = red;
+                left_rotate(s);
+                s = x->parent->left;
+            }
+
+            // Case 3.4 mirror
+            if (s &&
+                s->color() == black &&
+                s->left && s->left->color() == red)
+            {
+                s->color() = x->parent->color();
+                x->parent->color() = black;
+                s->left->color() = black;
+                right_rotate(x->parent);
+                x = root;
+            }
+        }
     }
 
-};
+    if (x)
+        x->color() = black;
+}
 
+   
+};

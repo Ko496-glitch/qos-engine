@@ -1,5 +1,9 @@
 # qos-engine
 
+
+
+UNDER DEVELOPEMENT FOR PACKET GENERATOR 
+
 Complete implementation of Real World QoS environment in C++.
 
 ## Language Composition

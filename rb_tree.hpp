@@ -334,7 +334,7 @@ Case 2) x is right child
             {
                 s->right->color() = black;
                 s->color() = red;
-                left_rotate(s);
+      left_rotate(s);
                 s = x->parent->left;
             }
 
@@ -351,10 +351,17 @@ Case 2) x is right child
             }
         }
     }
-
-    if (x)
-        x->color() = black;
-}
+    if (x)x->color() = black;
+  }
+  
+    node find_vruntime()noexcept{
+      assert(root && "runtime empty");
+      node current = root;
+      while(current->left){
+        current = current->left;
+    }
+      return current;
+  }
 
    
 };

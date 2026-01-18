@@ -86,9 +86,14 @@ What moved:
     return y;
   }
 
-  node successor(node )noexcept{
-          
-   }  
+  node* successor(node param)noexcept{
+    node temp = param;
+    while(temp->left != nullptr){
+      temp = temp->left;
+    }
+    return temp;
+   }
+
   void rb_insert(T value)noexcept{
     node current = new node(value);
     current.color = red;
@@ -187,7 +192,7 @@ Case 2) x is right child
       return y;
     }
 
-    node* rb_find(T value){
+    node* rb_find(T value)noexcept{
       node current = new node(value);
       if(current->value == root->value){return current;}
       while(current != nullptr){
@@ -202,40 +207,77 @@ Case 2) x is right child
       return nullptr;
     }
 
-    void rb_delete(T del_node)noexc::ept{
-      node current = find(del_node);
+    
+    void rb_delete(T value)noexcept{
+      node current = rb_find(value); 
       if(!current)return;
-      if(current->color == red){
-        if(!current->left && !current->right){
-          delete current ;
-          current->parent = nullptr;
-          return;
-        }else if(current->left && !current->right){
-          current->left->parent = current->parent;
-          current->left = nullptr;
-          delete current;
-          return;
-        }else if(!current->left && current->right){
-          current->right->parent = current->parent;
-          current->right = nullptr;
-          delete current;
+      node p = current->parent;
+      // Case 1 -> node to be deleted is red and has no child
+      if(current.color == red && current->left == nullptr && current->right == nullptr){
+        if(current->parent){
+         if(current == p->left){
+          p->left = nullptr;
+        }else if(current == p->right){
+          p->right = nullptr
         }else{
-          current = current->right;
-          node succ = current;
-          while(succ->left){
-            current = current->left;
-          }
-i
-          this->rb_translate()
-          node temp = current;
+          root = nullptr;
         }
-      }else{
-
+        delete current;
+        return;
       }
 
+        // case 2 -> node to be deleted is black with only one red child
+        if(current->color == black && (!current->left && current->right) || (current->left && !current->right)){
+          node x = current->left? current->left : current->right;
+          if(p){
+            if(p->left == current){
+              p->left = x;
+            }else if(p->right == current){
+              p->right = x;
+            }else{
+              root = x;
+            }
+            x->parent = p;
+            x->color = black;
+
+          }
+          delete current;
+          return;
+        }
+
+        // case 3 -> node to be deleted is black with black children
+
+
+        if(current->color == black){
+          current->color 
+        }
+        
+    }
+  }
+    void rb_delete_fixup(node x){
+      while(x!= root && x->color == black){
+        if(x == x->parent->left){
+          node s = x->parent->right;
+          if(s && s->color == red){
+            s->color = black;
+            x->parent->color =red;
+            this->rotate_left(x->parent);
+            s = x->parent->right;
+          }else{
+            node s = x->parent->left;
+            if(s && s->color == red){
+              s->color = black;
+              x->parent->color = red;
+              this->rotate_right(x->parent);
+              s = x->parent->left;
+            }
+          }
+
+          }
+        
+        }
       }
     }
-    
-  }
 
 };
+

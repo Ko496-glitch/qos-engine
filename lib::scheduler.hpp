@@ -20,21 +20,37 @@ namespace lib{
       u64 sum_exec_runtime
   };
 
-
-
-
-  
-
-  struct
+  struct task_struct{
+    std::size_t pid;
+    std::size_t  
+      
+  };
 
   class scheduler{
     
 
     public:
+      
       scheduler() noexcept = default;
 
+      void enqueu_sched(){
 
-      void next_
+      }
+
+      void deque_sched(){
+        
+      }
+
+      schedule_entity* pick_next(){
+        return find_vruntime();
+      }
+
+      void update_vruntime()noexcept{
+
+
+      }
+
+    
 
       
 
